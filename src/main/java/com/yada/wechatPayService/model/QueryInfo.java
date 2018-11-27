@@ -1,19 +1,19 @@
 package com.yada.wechatPayService.model;
 
-import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.util.Map;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.HashMap;
+import java.util.Map;
 @Entity
+@Data
 public class QueryInfo {
-    @Getter
-    @Setter
+
     @Id
     private String queryId;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String out_trade_no;
 

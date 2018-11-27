@@ -1,102 +1,80 @@
 package com.yada.wechatPayService.model;
 
-import javax.persistence.*;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.Map;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.HashMap;
+import java.util.Map;
 
 @Entity
+@Data
 public class PayInfo {
-    @Getter
-    @Setter
+
     @Id
     private String payId;
-    @Getter
-    @Setter
+
     @Column(length = 16)
     private String appid;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String mch_id;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String device_info;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String nonce_str;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String sign_type;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String sign;
-    @Getter
-    @Setter
+
     @Column(length = 128)
     private String body;
-    @Getter
-    @Setter
+
     @Column(length = 6000)
     private String detail;
-    @Getter
-    @Setter
+
     @Column(length = 127)
     private String attach;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String out_trade_no;
-    @Getter
-    @Setter
+
     private int total_fee;
-    @Getter
-    @Setter
+
     @Column(length = 16)
     private String fee_type;
-    @Getter
-    @Setter
+
     @Column(length = 16)
     private String spbill_create_ip;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String goods_tag;
-    @Getter
-    @Setter
+
     @Column(length = 32)
     private String limit_pay;
 
-    @Getter
-    @Setter
+
     @Column(length = 14)
     private String time_start;
 
-    @Getter
-    @Setter
     @Column(length = 14)
     private String time_expire;
-    @Getter
-    @Setter
+
     @Column(length = 128)
     private String auth_code;
-    @Getter
-    @Setter
+
     @Column(length = 256)
     private String scene_info;
-    @Getter
-    @Setter
+
     @Column(length = 16)
     private String trade_type;
-    @Getter
-    @Setter
+
     @Column(length = 16)
     private String sub_mch_id;
 
