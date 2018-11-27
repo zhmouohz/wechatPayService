@@ -62,10 +62,10 @@ public class PayController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("----------------------");
-        System.out.println(getJsonResult(true, resultMap));
-        System.out.println(resultMap.get("return_msg"));
-        System.out.println(getTranState(resultMap));
+//        System.out.println("----------------------");
+//        System.out.println(getJsonResult(true, resultMap));
+//        System.out.println(resultMap.get("return_msg"));
+//        System.out.println(getTranState(resultMap));
         String result = afterPayProcess(resultMap, wxpay, payInfo);
         if (result.equals(getJsonResult(false))) {
             //todo 失败后处理
