@@ -206,21 +206,7 @@ public class WXPayUtil {
                 sb.append(k).append("=").append(data.get(k).trim()).append("&");
         }
         sb.append("key=").append(key);
-        System.out.println(sb);
 
-        String aaa = "appid=wxde41f5a91e1a7b02&attach=ccc&auth_code=135005833628195231&body=aaaa&device_info=sss&goods_tag=aa&mch_id=1486523692&nonce_str=KpD23YXND1F3uWaVUzDDfzSRWLWRCcdP&out_trade_no=72802392f8864556bda7d1f58facc952&sign_type=MD5&spbill_create_ip=14.17.22.52&time_expire=20181126010101&total_fee=1&key=73e5bae3b222296a249e1e6c312f85f7";
-        String test ="appid=wxde41f5a91e1a7b02&attach=ccc&auth_code=135005833628195231&body=aaaa&device_info=sss&goods_tag=aa&mch_id=1486523692&nonce_str=KpD23YXND1F3uWaVUzDDfzSRWLWRCcdP&out_trade_no=72802392f8864556bda7d1f58facc952&sign_type=MD5&spbill_create_ip=14.17.22.52&time_expire=20181126010101&total_fee=1&key=73e5bae3b222296a249e1e6c312f85f7";
-
-        System.out.println(aaa.equals(test));
-
-        System.out.println(MD5(aaa.toString()).toUpperCase());
-        System.out.println(HMACSHA256(aaa.toString(), key));
-
-        System.out.println(MD5(test.toString()).toUpperCase());
-        System.out.println(HMACSHA256(test.toString(), key));
-
-        System.out.println(MD5(sb.toString()).toUpperCase());
-        System.out.println(HMACSHA256(sb.toString(), key));
         if (SignType.MD5.equals(signType)) {
             return MD5(sb.toString()).toUpperCase();
         }

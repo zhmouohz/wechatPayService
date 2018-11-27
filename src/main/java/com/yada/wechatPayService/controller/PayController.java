@@ -4,10 +4,10 @@ package com.yada.wechatPayService.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPay;
 import com.yada.util.wxpayUtil.WXPayConfigImpl;
+import com.yada.wechatPayService.base.BaseController;
+import com.yada.wechatPayService.model.PayInfo;
 import com.yada.wechatPayService.model.QueryInfo;
 import com.yada.wechatPayService.model.RefundInfo;
-import com.yada.wechatPayService.model.PayInfo;
-import com.yada.wechatPayService.base.BaseController;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -62,10 +62,10 @@ public class PayController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        System.out.println("----------------------");
-//        System.out.println(getJsonResult(true,resultMap));
-//        System.out.println(resultMap.get("return_msg"));
-//        System.out.println(getTranState(resultMap));
+        System.out.println("----------------------");
+        System.out.println(getJsonResult(true, resultMap));
+        System.out.println(resultMap.get("return_msg"));
+        System.out.println(getTranState(resultMap));
         String result = afterPayProcess(resultMap, wxpay, payInfo);
         if (result.equals(getJsonResult(false))) {
             //todo 失败后处理
@@ -100,7 +100,6 @@ public class PayController extends BaseController {
         }else{
             return getJsonResult(false);
         }
-        //todo Out_refund_no怎么获得
     }
 
 
@@ -128,7 +127,6 @@ public class PayController extends BaseController {
         }else{
             return getJsonResult(false);
         }
-        //todo Out_refund_no怎么获得
     }
 
 
@@ -285,7 +283,7 @@ public class PayController extends BaseController {
 //    private String wxpayAndConfigInit(WXPay wxpay, WXPayConfigImpl config) {
 //        try {
 //            config = new WXPayConfigImpl();
-//            wxpay = new WXPay(config, true, true);//todo 去掉沙箱环境
+//            wxpay = new WXPay(config, true, true);
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //            return getJsonResult(false);
