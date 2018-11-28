@@ -3,7 +3,6 @@ package com.yada.wechatPayService.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPay;
-import com.yada.util.wxpayUtil.WXPayConfigImpl;
 import com.yada.wechatPayService.base.BaseController;
 import com.yada.wechatPayService.model.PayInfo;
 import com.yada.wechatPayService.model.QueryInfo;
@@ -48,8 +47,8 @@ public class PayController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(PayController.class);
     @Autowired
     private WXPay wxpay;
-    @Autowired
-    private WXPayConfigImpl config;
+//    @Autowired
+//    private WXPayConfigImpl config;
 
 
     @RequestMapping(value = "/wechatPay", method = {RequestMethod.POST})
@@ -61,7 +60,7 @@ public class PayController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (getTranState(resultMap).equals(getJsonResult(true))) {
+        if (getTranState(resultMap).equals(TranStateEnum.SUCCESS)) {
             getJsonResult(true);
         }
         logger.debug("支付结果：" + getTranState(resultMap));
@@ -93,8 +92,8 @@ public class PayController extends BaseController {
             e.printStackTrace();
         }
 
-        TranState ts = getTranState(resultMap);
-        if (ts.equals(TranState.SUCCESS)) {
+        TranStateEnum ts = getTranState(resultMap);
+        if (ts.equals(TranStateEnum.SUCCESS)) {
             return getJsonResult(true);
         } else {
             return getJsonResult(false);
@@ -120,8 +119,8 @@ public class PayController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        TranState ts = getTranState(resultMap);
-        if (ts.equals(TranState.SUCCESS)) {
+        TranStateEnum ts = getTranState(resultMap);
+        if (ts.equals(TranStateEnum.SUCCESS)) {
             return getJsonResult(true, resultMap);
         } else {
             return getJsonResult(false);
@@ -144,12 +143,12 @@ public class PayController extends BaseController {
                 return waitAndQuery(5, wxpay, payInfo);
         }
 //
-//        if (getTranState(resultMap) == TranState.SUCCESS)
+//        if (getTranState(resultMap) == TranStateEnum.SUCCESS)
 //            return getJsonResult(true);
-//        if (getTranState(resultMap) == TranState.OTHER_FAIL) {
+//        if (getTranState(resultMap) == TranStateEnum.OTHER_FAIL) {
 //            return getJsonResult(false);
 //        }
-//        if (getTranState(resultMap) == TranState.PAYING) {
+//        if (getTranState(resultMap) == TranStateEnum.PAYING) {
 //            try {
 //                sleep(10 * 1000);
 //            } catch (InterruptedException e) {
@@ -158,7 +157,7 @@ public class PayController extends BaseController {
 //            }
 //            return queryResult(10, wxpay, payInfo);
 //        }
-//        if(getTranState(resultMap) == TranState.SYSTEMERROR){
+//        if(getTranState(resultMap) == TranStateEnum.SYSTEMERROR){
 //            return queryResult(0, wxpay, payInfo);
 //        }
 //        try {
@@ -182,10 +181,11 @@ public class PayController extends BaseController {
             e.printStackTrace();
         }
 
-        if (getTranState(resp) == TranState.SUCCESS)
+        if (getTranState(resp) == TranStateEnum.SUCCESS)
             return getJsonResult(true);
-        if (getTranState(resp) == TranState.OTHER_FAIL) {
-            if (resp.get("trade_state") != null) {
+        if (getTranState(resp) == TranStateEnum.OTHER_FAIL) {
+
+            if (resp != null && resp.get("trade_state") != null) {
                 Map<String, String> respMsgMap = new HashMap<>();
                 respMsgMap.put("trade_state", resp.get("trade_state"));
                 return getJsonResult(false, respMsgMap);
@@ -249,39 +249,39 @@ public class PayController extends BaseController {
         return JSON.toJSONString(new Result(result));
     }
 
-    private TranState getTranState(Map<String, String> resp) {
+    private TranStateEnum getTranState(Map<String, String> resp) {
         if (resp == null) {
-            return TranState.UNKNOWN;
+            return TranStateEnum.UNKNOWN;
         }
         if (resp.get("return_code").equals("FAIL")) {
-            return TranState.UNKNOWN;
+            return TranStateEnum.UNKNOWN;
         }
         if (resp.get("return_code").equals("SUCCESS") && resp.get("result_code").equals("SUCCESS") && resp.get("trade_state") == null) {
-            return TranState.SUCCESS;
+            return TranStateEnum.SUCCESS;
         }
         if (resp.get("return_code").equals("SUCCESS") && resp.get("result_code").equals("SUCCESS") && resp.get("trade_state").equals("SUCCESS")) {
-            return TranState.SUCCESS;
+            return TranStateEnum.SUCCESS;
         }
         if (resp.get("return_code").equals("SUCCESS") && resp.get("result_code").equals("FAIL") && !resp.get("err_code").equals("USERPAYING") && !resp.get("err_code").equals("SYSTEMERROR")) {
-            return TranState.OTHER_FAIL;
+            return TranStateEnum.OTHER_FAIL;
         }
         if (resp.get("return_code").equals("SUCCESS") && resp.get("result_code").equals("FAIL") && resp.get("err_code").equals("SYSTEMERROR")) {
-            return TranState.SYSTEMERROR;
+            return TranStateEnum.SYSTEMERROR;
         }
 
         if (resp.get("return_code").equals("SUCCESS") && resp.get("result_code").equals("SUCCESS") && resp.get("trade_state").equals("USERPAYING")) {
-            return TranState.PAYING;
+            return TranStateEnum.PAYING;
         }
         if (resp.get("return_code").equals("SUCCESS") && resp.get("result_code").equals("SUCCESS") && resp.get("trade_state") != null && resp.get("trade_state").equals("REFUND")) {
-            return TranState.REFUND;
+            return TranStateEnum.REFUND;
         }
         if (resp.get("return_code").equals("SUCCESS") && resp.get("result_code").equals("SUCCESS") && resp.get("trade_state") != null && (resp.get("trade_state").equals("REVOKED") || resp.get("trade_state").equals("REVOKED") || resp.get("trade_state").equals("NOTPAY") || resp.get("trade_state").equals("PAYERROR"))) {
-            return TranState.OTHER_FAIL;
+            return TranStateEnum.OTHER_FAIL;
         }
-        return TranState.PAYING;
+        return TranStateEnum.PAYING;
     }
 
-    private enum TranState {
+    private enum TranStateEnum {
         SUCCESS, PAYING, OTHER_FAIL, UNKNOWN, SYSTEMERROR, REFUND
     }
 
